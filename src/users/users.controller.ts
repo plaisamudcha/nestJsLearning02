@@ -15,9 +15,13 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { UsersService } from './users.service';
+import { create } from 'domain';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
   @Get(':id')
   findById(
     @Param(
@@ -39,7 +43,7 @@ export class UsersController {
   // createUser(
   //   @Body(new ValidationPipe({ transform: true, whitelist: true }))
   //   body: CreateUserDto)
-  createUser(@Body() body: CreateUserDto) {
+  async createUser(@Body() createUserDto: CreateUserDto) {
     // convert body (plain object) to CreateUserDto instance
     // validate instance of CreateUserDto
     // return body (plain object)
@@ -47,9 +51,10 @@ export class UsersController {
     // we have to use transform: true in ValidationPipe to convert plain object to class instance
     // we have to use whitelist: true in ValidationPipe to remove extra properties
     // but we can use global pipe in main.ts instead of using it in each controller
-    console.log(body);
-    console.log(body instanceof CreateUserDto); // true
-    return body;
+    // console.log(createUserDto);
+    // console.log(createUserDto instanceof CreateUserDto); // true
+    await this.usersService.createUser(createUserDto);
+    return 'User created';
   }
 
   @Patch(':userId')

@@ -1,6 +1,7 @@
 import { Transform, Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
+  IsAlphanumeric,
   IsArray,
   IsBoolean,
   IsDate,
@@ -12,6 +13,7 @@ import {
   IsPositive,
   IsString,
   IsUrl,
+  MinLength,
   ValidateNested
 } from 'class-validator';
 
@@ -37,6 +39,11 @@ export class CreateUserDto {
 
   @IsEmail({}, { message: 'Email must be valid' })
   email: string;
+
+  @IsString()
+  @IsAlphanumeric()
+  @MinLength(6)
+  password: string;
 
   @IsDate()
   @Type(() => Date) // transform string to Date
