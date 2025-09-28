@@ -1,15 +1,20 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Get,
+  HttpException,
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
+  Put,
   ValidationPipe
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -45,6 +50,27 @@ export class UsersController {
     console.log(body);
     console.log(body instanceof CreateUserDto); // true
     return body;
+  }
+
+  @Patch(':userId')
+  updateUser(@Param('userId') userId: string, @Body() body: UpdateUserDto) {
+    // throw new Error('Method not implemented.');
+    // throw new HttpException(
+    //   {
+    //     code: 'email_exist',
+    //     status: HttpStatus.CONFLICT,
+    //     details: 'Email already exists'
+    //   },
+    //   HttpStatus.CONFLICT
+    // );
+    // or we can use ConflictException that is child class of HttpException
+    throw new ConflictException({
+      code: 'email_exist',
+      status: HttpStatus.CONFLICT,
+      details: 'Email already exists'
+    });
+
+    // Best practice: error end point should return {status,message,code,details,timestamp,path}
   }
 }
 

@@ -11,8 +11,13 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       exceptionFactory(errors) {
+        // [{field: 'name', message: 'Name must be a string'}, {field: 'email', message: 'Email must be valid'}]
         console.log(errors);
-        throw new BadRequestException(errors);
+        const result = errors.map((err) => ({
+          field: err.property,
+          messages: Object.values(err.constraints ?? {})
+        }));
+        throw new BadRequestException(result);
       }
     })
   );
