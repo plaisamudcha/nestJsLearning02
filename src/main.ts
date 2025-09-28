@@ -8,8 +8,8 @@ async function bootstrap() {
   // apply global pipe
   app.useGlobalPipes(
     new ValidationPipe({
-      transform: true,
-      whitelist: true,
+      transform: true, // to convert payloads to DTO instances
+      whitelist: true, // to strip out unwanted properties
       exceptionFactory(errors) {
         // [{field: 'name', message: 'Name must be a string'}, {field: 'email', message: 'Email must be valid'}]
         console.log(errors);

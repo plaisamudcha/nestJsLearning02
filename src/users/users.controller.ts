@@ -6,6 +6,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Inject,
   Param,
   ParseIntPipe,
   Patch,
@@ -16,11 +17,28 @@ import {
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UsersService } from './users.service';
-import { create } from 'domain';
+import { ConfigService, type ConfigType } from '@nestjs/config';
+import { EnvConfig } from 'src/config/env.schema';
+import { envConfig, jwtConfig } from 'src/config/env.config';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    // private readonly configService: ConfigService<EnvConfig, true>
+    @Inject(envConfig.KEY)
+    private readonly envConfigService: ConfigType<typeof envConfig>,
+    @Inject('ABC') private readonly abc: UsersService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfigService: ConfigType<typeof jwtConfig>
+  ) {}
+
+  @Get()
+  find() {
+    // const port = this.configService.get('PORT', { infer: true });
+    const port = this.envConfigService.port;
+    const expireIn = this.jwtConfigService.JWT_EXPIREIN;
+  }
 
   @Get(':id')
   findById(
